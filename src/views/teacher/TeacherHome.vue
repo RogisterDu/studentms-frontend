@@ -5,7 +5,7 @@
     </el-header>
     <el-container style="height: 100%">
       <el-aside>
-        <StudentNav></StudentNav>
+        <TeacherNav>/</TeacherNav>
       </el-aside>
       <el-container>
         <el-main>
@@ -18,23 +18,16 @@
 </template>
 
 <script>
+
 import HeaderNav from '../../components/HeaderNav'
-import StudentNav from '../../components/StudentNav'
+import TeacherNav from '../../components/TeacherNav'
 
 export default {
-  name: 'Home',
-  components: {
-    StudentNav,
-    HeaderNav
-  },
-  data () {
-    return {
-      Name: 'djc',
-      identity: '学生'
-    }
-  }
+  name: 'TeacherHome',
+  components: { TeacherNav, HeaderNav }
 }
 </script>
+
 <style scoped lang="scss">
 .el-header {
   padding: 0;

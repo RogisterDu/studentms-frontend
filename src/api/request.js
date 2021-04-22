@@ -1,7 +1,18 @@
 import axios from 'axios'
+const qs = require('qs')
 
 axios.defaults.baseURL = 'http://localhost:8080/api/'
 axios.defaults.timeout = 10000
+
+axios.interceptors.request.use(
+  config => {
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
 
 /**
  * get方法，对应get请求
@@ -31,7 +42,7 @@ export function get (url, params) {
 export function post (url, params) {
   return new Promise((resolve, reject) => {
     axios
-      .post(url, params)
+      .post(url, qs.stringify(params))
       .then(res => {
         resolve(res)
       })

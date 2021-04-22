@@ -5,20 +5,20 @@
         <h2 class="head-title">XX专业学生管理系统</h2>
         <hr>
         <div class="et-form">
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="账号：">
-              <el-input class="input-box" v-model="form.username" maxlength="12" placeholder="请输入学号/工号"
+          <el-form ref="form" :model="form" label-width="80px" label-position="right" :rules="rules">
+            <el-form-item label="账 号：" class="et-item" prop="number">
+              <el-input class="input-box" v-model="form.number" maxlength="12" placeholder="请输入学号/工号"
                         prefix-icon="el-icon-user"></el-input>
             </el-form-item>
-            <el-form-item label="密码：">
+            <el-form-item label="密  码：" class="et-item" prop="password">
               <el-input class="input-box" v-model="form.password" maxlength="12" placeholder="请输入登陆密码"
                         prefix-icon="el-icon-key"
                         show-password>>
               </el-input>
             </el-form-item>
             <!--        //身份选择-->
-            <el-form-item label="身份: ">
-              <el-radio-group v-model="form.Identity">
+            <el-form-item label="身 份: " class="et-item" prop="identity">
+              <el-radio-group v-model="form.identity">
                 <el-radio :label="3">学生</el-radio>
                 <el-radio :label="6">老师</el-radio>
                 <el-radio :label="9">管理员</el-radio>
@@ -36,40 +36,90 @@
 </template>
 
 <script>
-import $api from '@/api/api_user'
+import $api from '../api/api_user'
 
 export default {
   name: 'Login',
   data () {
     return {
       form: {
-        username: '',
+        number: '',
         password: '',
-        Identity: 3
+        identity: 3
+      },
+      rules: {
+        number: [
+          {
+            required: true,
+            message: '请输入学号/工号',
+            trigger: 'blur'
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          }
+        ],
+        identity: [
+          {
+            required: true,
+            message: '请选择登录身份',
+            trigger: 'blur'
+          }
+        ]
       }
     }
   },
   methods: {
     dologin () {
-      if (!this.form.username) {
+      if (!this.form.number) {
         this.$message.error('请输入用户名')
       } else if (!this.form.password) {
         this.$message.error('请输入密码')
       } else {
         const data = {
-          id: '1',
-          password: '123456'
+          number: this.form.number,
+          password: this.form.password,
+          identity: this.form.identity
         }
         $api.login(data).then(response => {
-          console.log('请求成功，响应数据如下')
-          console.log(response.data)
+          if (response.data.status === 200) {
+            this.$message({
+              message: '登录成功，正在跳转.......',
+              type: 'success'
+            })
+            if (this.form.identity === 3) {
+              this.$router.push({
+                path: '/student/account'
+              })
+            } else if (this.form.identity === 6) {
+              this.$router.push({
+                path: '/teacher/account'
+              })
+            } else {
+              this.$router.push({
+                path: '/admin/account'
+              })
+            }
+          }
+          if (response.data.status === '201') {
+            console.log('用户不存在')
+            console.log(response.data)
+            this.$message({
+              message: '用户不存在.......',
+              type: 'error'
+            })
+          }
         }
-        ).finally(response => {
-          console.log('请求失败, 错误: ' + response.statusMessage)
+        ).catch(error => {
+          console.log('请求失败, 错误: ' + error.statusMessage)
         })
       }
     }
-  }
+  },
+  props: []
 }
 </script>
 
@@ -104,10 +154,10 @@ export default {
 
 .et-form {
   text-align: left;
+  padding-left: 10px;
 }
-
 .input-box {
-  width: 300px;
+  width: 260px;
 }
 
 .head-title {

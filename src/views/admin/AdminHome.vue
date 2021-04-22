@@ -5,7 +5,7 @@
     </el-header>
     <el-container style="height: 100%">
       <el-aside>
-        <StudentNav></StudentNav>
+        <AdminNav></AdminNav>
       </el-aside>
       <el-container>
         <el-main>
@@ -19,12 +19,12 @@
 
 <script>
 import HeaderNav from '../../components/HeaderNav'
-import StudentNav from '../../components/StudentNav'
+import AdminNav from '../../components/AdminNav'
 
 export default {
-  name: 'Home',
+  name: 'AdminHome',
   components: {
-    StudentNav,
+    AdminNav,
     HeaderNav
   },
   data () {
